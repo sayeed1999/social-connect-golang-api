@@ -5,6 +5,7 @@ import (
 	"log"
 	"sayeed1999/social-connect-golang-api/api/routes"
 	"sayeed1999/social-connect-golang-api/config"
+	"sayeed1999/social-connect-golang-api/infrastructure/database"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,7 @@ func main() {
 	cfg := config.GetConfig()
 
 	// Connect to database instance
-	// database.Connect()
+	database.Connect()
 
 	// Initialize Gin engine
 	app := gin.Default()
@@ -21,8 +22,8 @@ func main() {
 	// Initialize routes
 	routes.InitRoutes(app)
 
-	addr := fmt.Sprintf("%v:%v", cfg.ListenIP, cfg.ListenPort)
-	log.Printf("%v api will listen on %v", cfg.API.Name, addr)
+	addr := fmt.Sprintf("%v:%v", cfg.ListenIP, cfg.ListenPORT)
+	log.Printf("%v api will listen on %v", cfg.API.NAME, addr)
 
 	err := app.Run(addr)
 	log.Fatal(err)

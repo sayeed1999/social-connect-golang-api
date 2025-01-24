@@ -8,6 +8,7 @@ import (
 	"sayeed1999/social-connect-golang-api/models"
 	"strconv"
 
+	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -21,15 +22,15 @@ var DB DBInstance
 
 // Connect function
 func Connect() {
-	dbConfig := config.GetConfig().Database
+	dbConfig := config.GetConfig().DATABASE
 
 	// because our config function returns a string, we are parsing our str to int here
-	port, err := strconv.ParseUint(dbConfig.Port, 10, 32)
+	port, err := strconv.ParseUint(dbConfig.PORT, 10, 32)
 	if err != nil {
 		fmt.Println("Error parsing port str to int")
 	}
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable", dbConfig.Host, dbConfig.User, dbConfig.Password, dbConfig.Name, port)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable", dbConfig.HOST, dbConfig.USER, dbConfig.PASSWORD, dbConfig.NAME, port)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
@@ -51,7 +52,28 @@ func Connect() {
 		log.Fatal(err)
 	}
 
+	// Seed data
+	seedDatabase(db)
+
 	DB = DBInstance{
 		Db: db,
+	}
+}
+
+func seedDatabase(db *gorm.DB) {
+	log.Println("Seeding database")
+
+	users := []models.User{
+		{Name: "User I", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d471")}},
+		{Name: "User II", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d472")}},
+		{Name: "User III", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d473")}},
+		{Name: "User IV", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d474")}},
+		{Name: "User V", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d475")}},
+	}
+
+	for _, user := range users {
+		if err := db.FirstOrCreate(&user, models.User{Name: user.Name}).Error; err != nil {
+			log.Printf("Failed to seed user %s: %v\n", user.Name, err)
+		}
 	}
 }

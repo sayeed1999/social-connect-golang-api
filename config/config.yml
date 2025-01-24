@@ -1,14 +1,14 @@
 ListenIP: "0.0.0.0"
-ListenPort: "8080"
-Author:
-  Name: "Md. Sayeed Rahman"
-  Github: "github.com/sayeed1999"
+ListenPORT: "8080"
+AUTHOR:
+  NAME: "Md. Sayeed Rahman"
+  GITHUB: "github.com/sayeed1999"
 API:
-  Name: "Social Connect"
-  Version: "1.0.0"
-Database:
-  Host: "127.0.0.1"
-  Port: "5433"
-  User: "user"
-  Password: "password"
-  Name: "social-connect"
+  NAME: "Social Connect"
+  VERSION: "1.0.0"
+DATABASE:
+  HOST: "127.0.0.1"
+  PORT: "5433"
+  USER: ""
+  PASSWORD: ""
+  NAME: "social-connect"

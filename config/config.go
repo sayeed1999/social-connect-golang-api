@@ -19,28 +19,28 @@ var (
 
 type Config struct {
 	ListenIP   string
-	ListenPort string
-	Author     *Author
+	ListenPORT string
+	AUTHOR     *AUTHOR
 	API        *API
-	Database   *Database
+	DATABASE   *DATABASE
 }
 
-type Author struct {
-	Name   string
-	Github string
+type AUTHOR struct {
+	NAME   string
+	GITHUB string
 }
 
 type API struct {
-	Name    string
-	Version string
+	NAME    string
+	VERSION string
 }
 
-type Database struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
+type DATABASE struct {
+	HOST     string
+	PORT     string
+	USER     string
+	PASSWORD string
+	NAME     string
 }
 
 func GetConfig() *Config {
