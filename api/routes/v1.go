@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"sayeed1999/social-connect-golang-api/features/posts"
 	"sayeed1999/social-connect-golang-api/features/users"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +11,7 @@ func InitRoutes(app *gin.Engine) {
 	apiV1 := app.Group("/api/v1")
 	{
 		users.RegisterUserRoutes(apiV1)
+		posts.RegisterPostRoutes(apiV1)
 	}
 
 	app.GET("/", homePage)
