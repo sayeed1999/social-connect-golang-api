@@ -1,0 +1,38 @@
+services:
+
+  postgres-db:
+    image: postgres:16.4
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: ${API_DATABASE_NAME}
+      POSTGRES_USER: ${API_DATABASE_USER}
+      POSTGRES_PASSWORD: ${API_DATABASE_PASSWORD}
+    ports:
+      - ${API_DATABASE_PORT}:5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - api_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - 5434:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - api_network
+
+volumes:
+  pg-data:
+  pgadmin-data:
+
+networks:
+  api_network:
+    driver: bridge
