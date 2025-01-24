@@ -17,7 +17,7 @@ func (uc *getPostsUseCase) GetPosts(ctx context.Context) ([]models.Post, error) 
 
 	posts := []models.Post{}
 
-	if err := db.Find(&posts).Limit(10).Error; err != nil {
+	if err := db.Preload("Comments").Find(&posts).Limit(10).Error; err != nil {
 		return nil, err
 	}
 

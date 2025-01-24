@@ -2,6 +2,7 @@ package createpost
 
 import (
 	"context"
+	"sayeed1999/social-connect-golang-api/infrastructure/database"
 	"sayeed1999/social-connect-golang-api/models"
 
 	"github.com/go-playground/validator/v10"
@@ -25,19 +26,23 @@ func NewCreatePostUseCase() *createPostUseCase {
 }
 
 func (uc *createPostUseCase) CreatePost(ctx context.Context, request CreatePostRequest) (*CreatePostResponse, error) {
-	// db := database.DB.Db
+	db := database.DB.Db
 
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {
 		return nil, err
 	}
 
-	res := &CreatePostResponse{
-		Post: &models.Post{
-			Body:   request.Body,
-			UserID: uuid.MustParse(request.UserID),
-		},
+	post := &models.Post{
+		Body:   request.Body,
+		UserID: uuid.MustParse(request.UserID),
 	}
 
-	return res, nil
+	if err := db.Create(post).Error; err != nil {
+		return nil, err
+	}
+
+	return &CreatePostResponse{
+		Post: post,
+	}, nil
 }

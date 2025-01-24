@@ -2,6 +2,7 @@ package createcomment
 
 import (
 	"context"
+	"sayeed1999/social-connect-golang-api/infrastructure/database"
 	"sayeed1999/social-connect-golang-api/models"
 
 	"github.com/go-playground/validator/v10"
@@ -26,20 +27,24 @@ func NewCreateCommentUseCase() *createCommentUseCase {
 }
 
 func (uc *createCommentUseCase) CreateComment(ctx context.Context, request CreateCommentRequest) (*CreateCommentResponse, error) {
-	// db := database.DB.Db
+	db := database.DB.Db
 
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {
 		return nil, err
 	}
 
-	res := &CreateCommentResponse{
-		Comment: &models.Comment{
-			Body:   request.Body,
-			PostID: uuid.MustParse(request.PostID),
-			UserID: uuid.MustParse(request.UserID),
-		},
+	comment := &models.Comment{
+		Body:   request.Body,
+		PostID: uuid.MustParse(request.PostID),
+		UserID: uuid.MustParse(request.UserID),
 	}
 
-	return res, nil
+	if err := db.Create(comment).Error; err != nil {
+		return nil, err
+	}
+
+	return &CreateCommentResponse{
+		Comment: comment,
+	}, nil
 }
