@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"sayeed1999/social-connect-golang-api/features/comments"
 	"sayeed1999/social-connect-golang-api/features/posts"
 	"sayeed1999/social-connect-golang-api/features/users"
 
@@ -12,6 +13,7 @@ func InitRoutes(app *gin.Engine) {
 	{
 		users.RegisterUserRoutes(apiV1)
 		posts.RegisterPostRoutes(apiV1)
+		comments.RegisterCommentRoutes(apiV1)
 	}
 
 	app.GET("/", homePage)
