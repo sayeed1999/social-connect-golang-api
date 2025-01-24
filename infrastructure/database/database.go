@@ -67,13 +67,26 @@ func seedDatabase(db *gorm.DB) {
 		{Name: "User I", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d471")}},
 		{Name: "User II", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d472")}},
 		{Name: "User III", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d473")}},
-		{Name: "User IV", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d474")}},
-		{Name: "User V", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d475")}},
 	}
 
 	for _, user := range users {
 		if err := db.FirstOrCreate(&user, models.User{Name: user.Name}).Error; err != nil {
 			log.Printf("Failed to seed user %s: %v\n", user.Name, err)
+		}
+	}
+
+	posts := []models.Post{
+		{Body: "Post I", UserID: users[0].ID, BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d471")}},
+		{Body: "Post II", UserID: users[1].ID, BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d472")}},
+		{Body: "Post III", UserID: users[2].ID, BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d473")}},
+		{Body: "Post IV", UserID: users[0].ID, BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d474")}},
+		{Body: "Post V", UserID: users[1].ID, BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d475")}},
+		{Body: "Post VI", UserID: users[2].ID, BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d476")}},
+	}
+
+	for _, post := range posts {
+		if err := db.FirstOrCreate(&post, models.Post{Body: post.Body, UserID: post.UserID}).Error; err != nil {
+			log.Printf("Failed to seed post %s: %v\n", post.Body, err)
 		}
 	}
 }
