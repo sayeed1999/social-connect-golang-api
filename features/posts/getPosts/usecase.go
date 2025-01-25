@@ -2,7 +2,7 @@ package getposts
 
 import (
 	"context"
-	"sayeed1999/social-connect-golang-api/infrastructure/database"
+	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
 	"sayeed1999/social-connect-golang-api/models"
 )
 
@@ -13,11 +13,11 @@ func NewGetPostsUseCase() *getPostsUseCase {
 }
 
 func (uc *getPostsUseCase) GetPosts(ctx context.Context) ([]models.Post, error) {
-	db := database.DB.Db
 
-	posts := []models.Post{}
+	postRepository := repositories.NewPostRepository()
 
-	if err := db.Preload("Comments").Find(&posts).Limit(10).Error; err != nil {
+	posts, err := postRepository.GetPosts()
+	if err != nil {
 		return nil, err
 	}
 
