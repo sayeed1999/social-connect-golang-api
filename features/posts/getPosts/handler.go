@@ -12,7 +12,7 @@ type GetPostsUseCase interface {
 	GetPosts(ctx context.Context) ([]models.Post, error)
 }
 
-func GetPostsHandler(uc getPostsUseCase) gin.HandlerFunc {
+func GetPostsHandler(uc GetPostsUseCase) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		posts, err := uc.GetPosts(ctx)

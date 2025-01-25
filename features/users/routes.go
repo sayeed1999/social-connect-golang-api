@@ -11,7 +11,7 @@ func RegisterUserRoutes(rg *gin.RouterGroup) *gin.RouterGroup {
 
 	users := rg.Group("/users")
 	{
-		users.GET("", getusers.GetUsersHandler(*getUsersUC))
+		users.GET("", getusers.GetUsersHandler(getUsersUC))
 	}
 
 	return users

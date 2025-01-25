@@ -11,7 +11,7 @@ func RegisterCommentRoutes(rg *gin.RouterGroup) *gin.RouterGroup {
 
 	comments := rg.Group("/posts/:post_id/comments")
 	{
-		comments.POST("", createcomment.CreateCommentHandler(*createCommentUC))
+		comments.POST("", createcomment.CreateCommentHandler(createCommentUC))
 	}
 
 	return comments

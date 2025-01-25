@@ -12,7 +12,7 @@ type GetUsersUseCase interface {
 	GetUsers(ctx context.Context) ([]models.User, error)
 }
 
-func GetUsersHandler(uc getUsersUseCase) gin.HandlerFunc {
+func GetUsersHandler(uc GetUsersUseCase) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		users, err := uc.GetUsers(ctx)

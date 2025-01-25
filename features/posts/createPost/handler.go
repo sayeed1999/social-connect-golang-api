@@ -11,7 +11,7 @@ type CreatePostUseCase interface {
 	CreatePost(ctx context.Context, request CreatePostRequest) (*CreatePostResponse, error)
 }
 
-func CreatePostHandler(uc createPostUseCase) gin.HandlerFunc {
+func CreatePostHandler(uc CreatePostUseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var request CreatePostRequest
 

@@ -12,7 +12,7 @@ type CreateCommentUseCase interface {
 	CreateComment(ctx context.Context, request CreateCommentRequest) (*CreateCommentResponse, error)
 }
 
-func CreateCommentHandler(uc createCommentUseCase) gin.HandlerFunc {
+func CreateCommentHandler(uc CreateCommentUseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var request CreateCommentRequest
 

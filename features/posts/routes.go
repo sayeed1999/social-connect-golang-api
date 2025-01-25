@@ -13,8 +13,8 @@ func RegisterPostRoutes(rg *gin.RouterGroup) *gin.RouterGroup {
 
 	posts := rg.Group("/posts")
 	{
-		posts.GET("", getposts.GetPostsHandler(*getPostsUC))
-		posts.POST("", createpost.CreatePostHandler(*createPostUC))
+		posts.GET("", getposts.GetPostsHandler(getPostsUC))
+		posts.POST("", createpost.CreatePostHandler(createPostUC))
 	}
 
 	return posts
