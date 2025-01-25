@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"log"
-	"os"
 	"sayeed1999/social-connect-golang-api/config"
 	"sayeed1999/social-connect-golang-api/models"
 	"strconv"
@@ -14,55 +13,89 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type DBInstance struct {
-	Db *gorm.DB
+// Database interface defines the methods that our database implementation must have.
+// This allows us to mock the database for testing.
+type Database interface {
+	Instance() *gorm.DB
+	Connect() error
+	Close() error
 }
 
-var DB DBInstance
+type database struct {
+	db *gorm.DB
+}
 
-// Connect function
-func Connect() {
+// NewDatabase creates a new instance of a Database.
+func NewDatabase() Database {
+	return &database{}
+}
+
+// Instance returns the gorm.DB instance.
+func (d *database) Instance() *gorm.DB {
+	return d.db
+}
+
+// Connect initializes the database connection.
+func (d *database) Connect() error {
 	dbConfig := config.GetConfig().DATABASE
 
-	// because our config function returns a string, we are parsing our str to int here
+	// Parse port from string to uint
 	port, err := strconv.ParseUint(dbConfig.PORT, 10, 32)
 	if err != nil {
-		fmt.Println("Error parsing port str to int")
+		return fmt.Errorf("error parsing port: %w", err)
 	}
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable", dbConfig.HOST, dbConfig.USER, dbConfig.PASSWORD, dbConfig.NAME, port)
+	// Connection string
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
+		dbConfig.HOST, dbConfig.USER, dbConfig.PASSWORD, dbConfig.NAME, port)
 
+	// Open connection
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
+
 	if err != nil {
-		log.Fatal("Failed to connect to database. \n", err)
-		os.Exit(2)
+		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
+	// Log connection success
 	log.Println("Connected to database")
-	db.Logger = logger.Default.LogMode(logger.Info)
-	log.Println("running migrations on database")
 
-	if err = db.AutoMigrate(
+	d.db = db
+	log.Println("Running migrations on database")
+
+	// Run migrations
+	if err := d.db.AutoMigrate(
+		// Add your models here
 		&models.User{},
 		&models.Post{},
 		&models.Comment{},
 	); err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("migration failed: %w", err)
 	}
 
 	// Seed data
-	seedDatabase(db)
-
-	DB = DBInstance{
-		Db: db,
+	if err := seedDatabase(d.db); err != nil {
+		return fmt.Errorf("database seeding failed: %w", err)
 	}
+
+	return nil
 }
 
-func seedDatabase(db *gorm.DB) {
+// Close cleans up database resources.
+func (d *database) Close() error {
+	sqlDB, err := d.db.DB()
+	if err != nil {
+		return fmt.Errorf("failed to retrieve underlying SQL DB: %w", err)
+	}
+	return sqlDB.Close()
+}
+
+// Seed initial data into the database.
+func seedDatabase(db *gorm.DB) error {
 	log.Println("Seeding database")
 
+	// Add seeding logic here. Example:
 	users := []models.User{
 		{Name: "User I", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d471")}},
 		{Name: "User II", BaseModel: models.BaseModel{ID: uuid.MustParse("f47ac10b-58cc-0372-8567-0e02b2c3d472")}},
@@ -72,6 +105,7 @@ func seedDatabase(db *gorm.DB) {
 	for _, user := range users {
 		if err := db.FirstOrCreate(&user, models.User{Name: user.Name}).Error; err != nil {
 			log.Printf("Failed to seed user %s: %v\n", user.Name, err)
+			return err
 		}
 	}
 
@@ -87,6 +121,9 @@ func seedDatabase(db *gorm.DB) {
 	for _, post := range posts {
 		if err := db.FirstOrCreate(&post, models.Post{Body: post.Body, UserID: post.UserID}).Error; err != nil {
 			log.Printf("Failed to seed post %s: %v\n", post.Body, err)
+			return err
 		}
 	}
+
+	return nil
 }

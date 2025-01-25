@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"sayeed1999/social-connect-golang-api/infrastructure/database"
 	"sayeed1999/social-connect-golang-api/models"
+
+	"gorm.io/gorm"
 )
 
 // interface
@@ -13,16 +14,17 @@ type CommentRepository interface {
 
 // implementation
 
-type commentRepository struct{}
-
-func NewCommentRepository() CommentRepository {
-	return &commentRepository{}
+type commentRepository struct {
+	db *gorm.DB
 }
 
-func (cr *commentRepository) CreateComment(comment *models.Comment) (*models.Comment, error) {
-	db := database.DB.Db
+func NewCommentRepository(db *gorm.DB) CommentRepository {
+	return &commentRepository{db: db}
+}
 
-	if err := db.Create(comment).Error; err != nil {
+func (commentRepo *commentRepository) CreateComment(comment *models.Comment) (*models.Comment, error) {
+
+	if err := commentRepo.db.Create(comment).Error; err != nil {
 		return nil, err
 	}
 

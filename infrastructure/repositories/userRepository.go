@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"sayeed1999/social-connect-golang-api/infrastructure/database"
 	"sayeed1999/social-connect-golang-api/models"
+
+	"gorm.io/gorm"
 )
 
 // interface
@@ -13,18 +14,19 @@ type UserRepository interface {
 
 // implementation
 
-type userRepository struct{}
-
-func NewUserRepository() UserRepository {
-	return &userRepository{}
+type userRepository struct {
+	db *gorm.DB
 }
 
-func (ur *userRepository) GetUsers() ([]models.User, error) {
-	db := database.DB.Db
+func NewUserRepository(db *gorm.DB) UserRepository {
+	return &userRepository{db: db}
+}
+
+func (userRepo *userRepository) GetUsers() ([]models.User, error) {
 
 	users := []models.User{}
 
-	if err := db.Find(&users).Limit(10).Error; err != nil {
+	if err := userRepo.db.Find(&users).Limit(10).Error; err != nil {
 		return nil, err
 	}
 

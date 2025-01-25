@@ -6,14 +6,15 @@ import (
 	"sayeed1999/social-connect-golang-api/features/users"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func InitRoutes(app *gin.Engine) {
+func InitRoutes(app *gin.Engine, dbInstance *gorm.DB) {
 	apiV1 := app.Group("/api/v1")
 	{
-		users.RegisterUserRoutes(apiV1)
-		posts.RegisterPostRoutes(apiV1)
-		comments.RegisterCommentRoutes(apiV1)
+		users.RegisterUserRoutes(apiV1, dbInstance)
+		posts.RegisterPostRoutes(apiV1, dbInstance)
+		comments.RegisterCommentRoutes(apiV1, dbInstance)
 	}
 
 	app.GET("/", homePage)

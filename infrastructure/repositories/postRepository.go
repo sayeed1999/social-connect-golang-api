@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"sayeed1999/social-connect-golang-api/infrastructure/database"
 	"sayeed1999/social-connect-golang-api/models"
+
+	"gorm.io/gorm"
 )
 
 // interface
@@ -14,28 +15,28 @@ type PostRepository interface {
 
 // implementation
 
-type postRepository struct{}
-
-func NewPostRepository() PostRepository {
-	return &postRepository{}
+type postRepository struct {
+	db *gorm.DB
 }
 
-func (pr *postRepository) GetPosts() ([]models.Post, error) {
-	db := database.DB.Db
+func NewPostRepository(db *gorm.DB) PostRepository {
+	return &postRepository{db: db}
+}
+
+func (postRepo *postRepository) GetPosts() ([]models.Post, error) {
 
 	posts := []models.Post{}
 
-	if err := db.Preload("Comments").Find(&posts).Limit(10).Error; err != nil {
+	if err := postRepo.db.Preload("Comments").Find(&posts).Limit(10).Error; err != nil {
 		return nil, err
 	}
 
 	return posts, nil
 }
 
-func (pr *postRepository) CreatePost(post *models.Post) (*models.Post, error) {
-	db := database.DB.Db
+func (postRepo *postRepository) CreatePost(post *models.Post) (*models.Post, error) {
 
-	if err := db.Create(post).Error; err != nil {
+	if err := postRepo.db.Create(post).Error; err != nil {
 		return nil, err
 	}
 

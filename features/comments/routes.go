@@ -5,11 +5,13 @@ import (
 	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func RegisterCommentRoutes(rg *gin.RouterGroup) *gin.RouterGroup {
+func RegisterCommentRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB) *gin.RouterGroup {
 
-	commentRepository := repositories.NewCommentRepository()
+	commentRepository := repositories.NewCommentRepository(dbInstance)
+
 	createCommentUC := createcomment.NewCreateCommentUseCase(commentRepository)
 
 	comments := rg.Group("/posts/:post_id/comments")

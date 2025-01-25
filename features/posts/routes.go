@@ -6,11 +6,13 @@ import (
 	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func RegisterPostRoutes(rg *gin.RouterGroup) *gin.RouterGroup {
+func RegisterPostRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB) *gin.RouterGroup {
 
-	postRepository := repositories.NewPostRepository()
+	postRepository := repositories.NewPostRepository(dbInstance)
+
 	getPostsUC := getposts.NewGetPostsUseCase(postRepository)
 	createPostUC := createpost.NewCreatePostUseCase(postRepository)
 

@@ -14,13 +14,18 @@ func main() {
 	cfg := config.GetConfig()
 
 	// Connect to database instance
-	database.Connect()
+	database := database.NewDatabase()
+	if err := database.Connect(); err != nil {
+		log.Fatalf("error connecting to database: %v", err)
+	}
+
+	dbInstance := database.Instance()
 
 	// Initialize Gin engine
 	app := gin.Default()
 
 	// Initialize routes
-	routes.InitRoutes(app)
+	routes.InitRoutes(app, dbInstance)
 
 	addr := fmt.Sprintf("%v:%v", cfg.ListenIP, cfg.ListenPORT)
 	log.Printf("%v api will listen on %v", cfg.API.NAME, addr)
