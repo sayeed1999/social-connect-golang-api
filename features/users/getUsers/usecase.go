@@ -6,16 +6,17 @@ import (
 	"sayeed1999/social-connect-golang-api/models"
 )
 
-type getUsersUseCase struct{}
+type getUsersUseCase struct {
+	userRepository repositories.UserRepository
+}
 
-func NewGetUsersUseCase() *getUsersUseCase {
-	return &getUsersUseCase{}
+func NewGetUsersUseCase(userRepository repositories.UserRepository) *getUsersUseCase {
+	return &getUsersUseCase{userRepository: userRepository}
 }
 
 func (uc *getUsersUseCase) GetUsers(ctx context.Context) ([]models.User, error) {
-	userRepository := repositories.NewUserRepository()
 
-	users, error := userRepository.GetUsers()
+	users, error := uc.userRepository.GetUsers()
 	if error != nil {
 		return nil, error
 	}

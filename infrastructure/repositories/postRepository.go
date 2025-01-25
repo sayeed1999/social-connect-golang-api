@@ -5,9 +5,18 @@ import (
 	"sayeed1999/social-connect-golang-api/models"
 )
 
+// interface
+
+type PostRepository interface {
+	GetPosts() ([]models.Post, error)
+	CreatePost(post *models.Post) (*models.Post, error)
+}
+
+// implementation
+
 type postRepository struct{}
 
-func NewPostRepository() *postRepository {
+func NewPostRepository() PostRepository {
 	return &postRepository{}
 }
 

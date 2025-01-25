@@ -2,12 +2,15 @@ package users
 
 import (
 	getusers "sayeed1999/social-connect-golang-api/features/users/getUsers"
+	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
 
 	"github.com/gin-gonic/gin"
 )
 
 func RegisterUserRoutes(rg *gin.RouterGroup) *gin.RouterGroup {
-	getUsersUC := getusers.NewGetUsersUseCase()
+
+	userRepository := repositories.NewUserRepository()
+	getUsersUC := getusers.NewGetUsersUseCase(userRepository)
 
 	users := rg.Group("/users")
 	{

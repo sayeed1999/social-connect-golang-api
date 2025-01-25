@@ -6,17 +6,17 @@ import (
 	"sayeed1999/social-connect-golang-api/models"
 )
 
-type getPostsUseCase struct{}
+type getPostsUseCase struct {
+	postRepository repositories.PostRepository
+}
 
-func NewGetPostsUseCase() *getPostsUseCase {
-	return &getPostsUseCase{}
+func NewGetPostsUseCase(postRepository repositories.PostRepository) *getPostsUseCase {
+	return &getPostsUseCase{postRepository: postRepository}
 }
 
 func (uc *getPostsUseCase) GetPosts(ctx context.Context) ([]models.Post, error) {
 
-	postRepository := repositories.NewPostRepository()
-
-	posts, err := postRepository.GetPosts()
+	posts, err := uc.postRepository.GetPosts()
 	if err != nil {
 		return nil, err
 	}

@@ -5,9 +5,17 @@ import (
 	"sayeed1999/social-connect-golang-api/models"
 )
 
+// interface
+
+type CommentRepository interface {
+	CreateComment(comment *models.Comment) (*models.Comment, error)
+}
+
+// implementation
+
 type commentRepository struct{}
 
-func NewCommentRepository() *commentRepository {
+func NewCommentRepository() CommentRepository {
 	return &commentRepository{}
 }
 

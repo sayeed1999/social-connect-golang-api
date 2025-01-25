@@ -5,9 +5,17 @@ import (
 	"sayeed1999/social-connect-golang-api/models"
 )
 
+// interface
+
+type UserRepository interface {
+	GetUsers() ([]models.User, error)
+}
+
+// implementation
+
 type userRepository struct{}
 
-func NewUserRepository() *userRepository {
+func NewUserRepository() UserRepository {
 	return &userRepository{}
 }
 

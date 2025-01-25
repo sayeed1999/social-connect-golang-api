@@ -9,24 +9,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreatePostRequest struct {
-	Body   string `json:"body" validate:"required,min=3,max=100"`
-	UserID string `json:"user_id" validate:"required,min=3,max=50"`
+type createPostUseCase struct {
+	postRepository repositories.PostRepository
 }
 
-type CreatePostResponse struct {
-	Post    *models.Post `json:"post,omitempty"`
-	Success bool         `json:"success"`
-}
-
-type createPostUseCase struct{}
-
-func NewCreatePostUseCase() *createPostUseCase {
-	return &createPostUseCase{}
+func NewCreatePostUseCase(postRepository repositories.PostRepository) *createPostUseCase {
+	return &createPostUseCase{postRepository: postRepository}
 }
 
 func (uc *createPostUseCase) CreatePost(ctx context.Context, request CreatePostRequest) (*CreatePostResponse, error) {
-	postRepository := repositories.NewPostRepository()
 
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {
@@ -38,7 +29,7 @@ func (uc *createPostUseCase) CreatePost(ctx context.Context, request CreatePostR
 		UserID: uuid.MustParse(request.UserID),
 	}
 
-	post, err := postRepository.CreatePost(post)
+	post, err := uc.postRepository.CreatePost(post)
 	if err != nil {
 		return nil, err
 	}

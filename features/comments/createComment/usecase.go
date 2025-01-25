@@ -9,25 +9,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateCommentRequest struct {
-	Body   string `json:"body" validate:"required,min=3,max=100"`
-	PostID string `json:"post_id" validate:"required,min=3,max=50"`
-	UserID string `json:"user_id" validate:"required,min=3,max=50"`
+type createCommentUseCase struct {
+	commentRepository repositories.CommentRepository
 }
 
-type CreateCommentResponse struct {
-	Comment *models.Comment `json:"comment,omitempty"`
-	Success bool            `json:"success"`
-}
-
-type createCommentUseCase struct{}
-
-func NewCreateCommentUseCase() *createCommentUseCase {
-	return &createCommentUseCase{}
+func NewCreateCommentUseCase(commentRepository repositories.CommentRepository) *createCommentUseCase {
+	return &createCommentUseCase{commentRepository: commentRepository}
 }
 
 func (uc *createCommentUseCase) CreateComment(ctx context.Context, request CreateCommentRequest) (*CreateCommentResponse, error) {
-	commentRepository := repositories.NewCommentRepository()
 
 	validate := validator.New()
 	if err := validate.Struct(request); err != nil {
@@ -40,7 +30,7 @@ func (uc *createCommentUseCase) CreateComment(ctx context.Context, request Creat
 		UserID: uuid.MustParse(request.UserID),
 	}
 
-	comment, err := commentRepository.CreateComment(comment)
+	comment, err := uc.commentRepository.CreateComment(comment)
 	if err != nil {
 		return nil, err
 	}
