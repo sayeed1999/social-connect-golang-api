@@ -3,6 +3,7 @@ package supportpost
 import (
 	"context"
 	"errors"
+	"sayeed1999/social-connect-golang-api/features/posts/supportPost/scoring"
 	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
 
 	"github.com/google/uuid"
@@ -29,8 +30,11 @@ func (uc *supportUseCase) SupportPost(ctx context.Context, request SupportPostRe
 		return nil, errors.New("post not found")
 	}
 
-	// rest of the business logic
-	post.Score++
+	// Get a scoring strategy & apply score! (FACTORY DESIGN PATTERN)
+
+	scoringStrategyFactory := &scoring.ScoringStrategyFactory{}
+	scoringStrategy := scoringStrategyFactory.GetScoringStrategy(&post.User)
+	scoringStrategy.ApplyScore(post)
 
 	post, err = uc.postRepository.UpdatePost(post)
 	if err != nil {
