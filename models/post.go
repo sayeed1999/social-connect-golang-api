@@ -11,6 +11,7 @@ type Post struct {
 	Comments []Comment `json:"comments"`
 	UserID   uuid.UUID `json:"user_id" gorm:"type:uuid;not null"`
 	User     User      `json:"user" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
+	Score    int       `json:"score" gorm:"default:0"`
 }
 
 func (u *Post) BeforeCreate(tx *gorm.DB) (err error) {

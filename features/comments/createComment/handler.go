@@ -20,6 +20,7 @@ func CreateCommentHandler(uc CreateCommentUseCase) gin.HandlerFunc {
 		postID := c.Param("post_id")
 		if postID == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "post_id is required"})
+			return
 		}
 
 		// Bind the incoming JSON to the request struct
