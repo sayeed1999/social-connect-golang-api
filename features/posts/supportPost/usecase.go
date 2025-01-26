@@ -2,9 +2,9 @@ package supportpost
 
 import (
 	"context"
-	"errors"
 	"sayeed1999/social-connect-golang-api/features/posts/supportPost/scoring"
 	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
+	"sayeed1999/social-connect-golang-api/shared/constants"
 
 	"github.com/google/uuid"
 )
@@ -27,8 +27,15 @@ func (uc *supportUseCase) SupportPost(ctx context.Context, request SupportPostRe
 	}
 
 	if post == nil {
-		return nil, errors.New("post not found")
+		return nil, constants.ErrPostNotFound
 	}
+
+	// Note: DON'T DO THIS! INSTEAD FOLLOW THE FACTORY DESIGN PATTERN BELOW
+	// if post.User.IsAdmin != nil && *post.User.IsAdmin {
+	// 	post.Score += 10
+	// } else {
+	// 	post.Score += 1
+	// }
 
 	// Get a scoring strategy & apply score! (FACTORY DESIGN PATTERN)
 
