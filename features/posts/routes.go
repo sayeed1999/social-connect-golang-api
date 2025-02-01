@@ -2,6 +2,7 @@ package posts
 
 import (
 	createpost "sayeed1999/social-connect-golang-api/features/posts/createPost"
+	getpostbyid "sayeed1999/social-connect-golang-api/features/posts/getPostByID"
 	getposts "sayeed1999/social-connect-golang-api/features/posts/getPosts"
 	supportpost "sayeed1999/social-connect-golang-api/features/posts/supportPost"
 	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
@@ -15,12 +16,14 @@ func RegisterPostRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB) *gin.RouterGro
 	postRepository := repositories.NewPostRepository(dbInstance)
 
 	getPostsUC := getposts.NewGetPostsUseCase(postRepository)
+	getPostByIdUC := getpostbyid.NewGetPostByIDUseCase(postRepository)
 	createPostUC := createpost.NewCreatePostUseCase(postRepository)
 	supportPostUC := supportpost.NewSupportPostUseCase(postRepository)
 
 	posts := rg.Group("/posts")
 	{
 		posts.GET("", getposts.GetPostsHandler(getPostsUC))
+		posts.GET("/:post_id", getpostbyid.GetPostByIDHandler(getPostByIdUC))
 		posts.POST("", createpost.CreatePostHandler(createPostUC))
 		posts.POST("/:post_id/support", supportpost.SupportPostHandler(supportPostUC))
 	}
