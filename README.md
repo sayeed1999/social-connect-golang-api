@@ -10,6 +10,8 @@ export API_DATABASE_USER=xxx
 export API_DATABASE_PASSWORD=xxx
 export API_DATABASE_PORT=5432
 
+export API_REDIS_PORT=6379
+
 export PGADMIN_EMAIL=xxx
 export PGADMIN_PASSWORD=xxx
 ```
