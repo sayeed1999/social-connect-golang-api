@@ -22,7 +22,7 @@ func RegisterPostRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB) *gin.RouterGro
 	{
 		posts.GET("", getposts.GetPostsHandler(getPostsUC))
 		posts.POST("", createpost.CreatePostHandler(createPostUC))
-		posts.POST("/:id/support", supportpost.SupportPostHandler(supportPostUC))
+		posts.POST("/:post_id/support", supportpost.SupportPostHandler(supportPostUC))
 	}
 
 	return posts

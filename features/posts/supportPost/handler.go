@@ -17,7 +17,7 @@ func SupportPostHandler(uc SupportPostUseCase) gin.HandlerFunc {
 		var request SupportPostRequest
 
 		// Extract post_id from route_param
-		post_id := c.Param("id")
+		post_id := c.Param("post_id")
 		if post_id == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "post_id is required"})
 			return
