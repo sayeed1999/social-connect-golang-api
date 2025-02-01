@@ -2,7 +2,7 @@ package createpost
 
 import (
 	"context"
-	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
+	"sayeed1999/social-connect-golang-api/features/posts/infrastructure"
 	"sayeed1999/social-connect-golang-api/models"
 
 	"github.com/go-playground/validator/v10"
@@ -10,11 +10,11 @@ import (
 )
 
 type createPostUseCase struct {
-	postRepository repositories.PostRepository
+	postRepoWithCache infrastructure.PostRepositoryWithCache
 }
 
-func NewCreatePostUseCase(postRepository repositories.PostRepository) *createPostUseCase {
-	return &createPostUseCase{postRepository: postRepository}
+func NewCreatePostUseCase(postRepoWithCache infrastructure.PostRepositoryWithCache) *createPostUseCase {
+	return &createPostUseCase{postRepoWithCache: postRepoWithCache}
 }
 
 func (uc *createPostUseCase) CreatePost(ctx context.Context, request CreatePostRequest) (*CreatePostResponse, error) {
@@ -29,7 +29,7 @@ func (uc *createPostUseCase) CreatePost(ctx context.Context, request CreatePostR
 		UserID: uuid.MustParse(request.UserID),
 	}
 
-	post, err := uc.postRepository.CreatePost(post)
+	post, err := uc.postRepoWithCache.CreatePost(ctx, post)
 	if err != nil {
 		return nil, err
 	}

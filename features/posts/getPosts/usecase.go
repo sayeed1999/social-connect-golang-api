@@ -2,21 +2,21 @@ package getposts
 
 import (
 	"context"
-	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
+	"sayeed1999/social-connect-golang-api/features/posts/infrastructure"
 	"sayeed1999/social-connect-golang-api/models"
 )
 
 type getPostsUseCase struct {
-	postRepository repositories.PostRepository
+	postRepoWithCache infrastructure.PostRepositoryWithCache
 }
 
-func NewGetPostsUseCase(postRepository repositories.PostRepository) *getPostsUseCase {
-	return &getPostsUseCase{postRepository: postRepository}
+func NewGetPostsUseCase(postRepoWithCache infrastructure.PostRepositoryWithCache) *getPostsUseCase {
+	return &getPostsUseCase{postRepoWithCache: postRepoWithCache}
 }
 
 func (uc *getPostsUseCase) GetPosts(ctx context.Context) ([]models.Post, error) {
 
-	posts, err := uc.postRepository.GetPosts()
+	posts, err := uc.postRepoWithCache.GetPosts(ctx)
 	if err != nil {
 		return nil, err
 	}

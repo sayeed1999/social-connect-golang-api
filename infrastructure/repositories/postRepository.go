@@ -19,15 +19,15 @@ type PostRepository interface {
 
 // implementation
 
-type postRepository struct {
+type postRepoWithCache struct {
 	db *gorm.DB
 }
 
 func NewPostRepository(db *gorm.DB) PostRepository {
-	return &postRepository{db: db}
+	return &postRepoWithCache{db: db}
 }
 
-func (postRepo *postRepository) GetPosts() ([]models.Post, error) {
+func (postRepo *postRepoWithCache) GetPosts() ([]models.Post, error) {
 
 	posts := []models.Post{}
 
@@ -38,7 +38,7 @@ func (postRepo *postRepository) GetPosts() ([]models.Post, error) {
 	return posts, nil
 }
 
-func (postRepo *postRepository) GetPostByID(postID uuid.UUID, preload bool) (*models.Post, error) {
+func (postRepo *postRepoWithCache) GetPostByID(postID uuid.UUID, preload bool) (*models.Post, error) {
 
 	post := &models.Post{}
 
@@ -55,7 +55,7 @@ func (postRepo *postRepository) GetPostByID(postID uuid.UUID, preload bool) (*mo
 	return post, nil
 }
 
-func (postRepo *postRepository) CreatePost(post *models.Post) (*models.Post, error) {
+func (postRepo *postRepoWithCache) CreatePost(post *models.Post) (*models.Post, error) {
 
 	if err := postRepo.db.Create(post).Error; err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (postRepo *postRepository) CreatePost(post *models.Post) (*models.Post, err
 	return post, nil
 }
 
-func (postRepo *postRepository) UpdatePost(post *models.Post) (*models.Post, error) {
+func (postRepo *postRepoWithCache) UpdatePost(post *models.Post) (*models.Post, error) {
 	fmt.Println(*post)
 	if err := postRepo.db.Updates(post).Error; err != nil {
 		return nil, err
