@@ -26,7 +26,7 @@ func (uc *getPostByIDUseCase) GetPostByID(ctx context.Context, postID uuid.UUID)
 	cacheKey := getCacheKeyForGettingPostID(postID, false)
 
 	// Step 2: Try to get the post from the cache first
-	cachedPost, err := uc.cacheClient.Get(context.Background(), cacheKey)
+	cachedPost, err := uc.cacheClient.Get(ctx, cacheKey)
 	if err != nil {
 		log.Printf("Cache get error for key %s: %v", cacheKey, err)
 	}
@@ -52,7 +52,7 @@ func (uc *getPostByIDUseCase) GetPostByID(ctx context.Context, postID uuid.UUID)
 		return nil, err
 	}
 
-	if err := uc.cacheClient.Set(context.Background(), cacheKey, serializedPost); err != nil {
+	if err := uc.cacheClient.Set(ctx, cacheKey, serializedPost); err != nil {
 		return nil, err
 	}
 
