@@ -21,7 +21,7 @@ func NewSupportPostUseCase(postRepository repositories.PostRepository) *supportU
 
 func (uc *supportUseCase) SupportPost(ctx context.Context, request SupportPostRequest) (*SupportPostResponse, error) {
 
-	post, err := uc.postRepository.GetPostByID(uuid.MustParse(request.PostID))
+	post, err := uc.postRepository.GetPostByID(uuid.MustParse(request.PostID), false)
 	if err != nil {
 		return nil, err
 	}

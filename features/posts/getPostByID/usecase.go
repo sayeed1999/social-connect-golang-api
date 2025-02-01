@@ -18,7 +18,7 @@ func NewGetPostByIDUseCase(postRepository repositories.PostRepository) *getPostB
 
 func (uc *getPostByIDUseCase) GetPostByID(ctx context.Context, id uuid.UUID) (*models.Post, error) {
 
-	post, err := uc.postRepository.GetPostByID(id)
+	post, err := uc.postRepository.GetPostByID(id, true)
 	if err != nil {
 		return nil, err
 	}

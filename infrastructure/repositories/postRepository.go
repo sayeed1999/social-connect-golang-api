@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"sayeed1999/social-connect-golang-api/models"
 
 	"github.com/google/uuid"
@@ -11,7 +12,7 @@ import (
 
 type PostRepository interface {
 	GetPosts() ([]models.Post, error)
-	GetPostByID(postID uuid.UUID) (*models.Post, error)
+	GetPostByID(postID uuid.UUID, preload bool) (*models.Post, error)
 	CreatePost(post *models.Post) (*models.Post, error)
 	UpdatePost(post *models.Post) (*models.Post, error)
 }
@@ -37,11 +38,17 @@ func (postRepo *postRepository) GetPosts() ([]models.Post, error) {
 	return posts, nil
 }
 
-func (postRepo *postRepository) GetPostByID(postID uuid.UUID) (*models.Post, error) {
+func (postRepo *postRepository) GetPostByID(postID uuid.UUID, preload bool) (*models.Post, error) {
 
 	post := &models.Post{}
 
-	if err := postRepo.db.Preload("Comments").First(post, postID).Error; err != nil {
+	query := postRepo.db
+
+	if preload {
+		query = query.Preload("Comments")
+	}
+
+	if err := query.First(post, postID).Error; err != nil {
 		return nil, err
 	}
 
@@ -58,8 +65,8 @@ func (postRepo *postRepository) CreatePost(post *models.Post) (*models.Post, err
 }
 
 func (postRepo *postRepository) UpdatePost(post *models.Post) (*models.Post, error) {
-
-	if err := postRepo.db.Save(post).Error; err != nil {
+	fmt.Println(*post)
+	if err := postRepo.db.Updates(post).Error; err != nil {
 		return nil, err
 	}
 
