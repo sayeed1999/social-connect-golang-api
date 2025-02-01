@@ -2,6 +2,7 @@ package cache
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -40,6 +41,7 @@ func (c *cacheClient) Init() {
 
 // Set stores a key-value pair in Redis with an expiration time
 func (c *cacheClient) Set(ctx context.Context, key string, value string) error {
+	log.Printf("Setting cache with key: %s", key)
 	return c.client.Set(ctx, key, value, c.defaultExpiration).Err()
 }
 

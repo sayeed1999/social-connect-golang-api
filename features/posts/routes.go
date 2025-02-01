@@ -14,10 +14,10 @@ import (
 
 func RegisterPostRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB, cacheInstance cache.CacheClient) *gin.RouterGroup {
 
-	postRepository := repositories.NewPostRepository(dbInstance, cacheInstance)
+	postRepository := repositories.NewPostRepository(dbInstance)
 
 	getPostsUC := getposts.NewGetPostsUseCase(postRepository)
-	getPostByIdUC := getpostbyid.NewGetPostByIDUseCase(postRepository)
+	getPostByIdUC := getpostbyid.NewGetPostByIDUseCase(postRepository, cacheInstance)
 	createPostUC := createpost.NewCreatePostUseCase(postRepository)
 	supportPostUC := supportpost.NewSupportPostUseCase(postRepository)
 
