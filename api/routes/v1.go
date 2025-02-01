@@ -4,17 +4,18 @@ import (
 	"sayeed1999/social-connect-golang-api/features/comments"
 	"sayeed1999/social-connect-golang-api/features/posts"
 	"sayeed1999/social-connect-golang-api/features/users"
+	"sayeed1999/social-connect-golang-api/infrastructure/cache"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func InitRoutes(app *gin.Engine, dbInstance *gorm.DB) {
+func InitRoutes(app *gin.Engine, dbInstance *gorm.DB, cacheInstance cache.CacheClient) {
 	apiV1 := app.Group("/api/v1")
 	{
 		users.RegisterUserRoutes(apiV1, dbInstance)
-		posts.RegisterPostRoutes(apiV1, dbInstance)
-		comments.RegisterCommentRoutes(apiV1, dbInstance)
+		posts.RegisterPostRoutes(apiV1, dbInstance, cacheInstance)
+		comments.RegisterCommentRoutes(apiV1, dbInstance, cacheInstance)
 	}
 
 	app.GET("/", homePage)

@@ -5,15 +5,16 @@ import (
 	getpostbyid "sayeed1999/social-connect-golang-api/features/posts/getPostByID"
 	getposts "sayeed1999/social-connect-golang-api/features/posts/getPosts"
 	supportpost "sayeed1999/social-connect-golang-api/features/posts/supportPost"
+	"sayeed1999/social-connect-golang-api/infrastructure/cache"
 	"sayeed1999/social-connect-golang-api/infrastructure/repositories"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func RegisterPostRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB) *gin.RouterGroup {
+func RegisterPostRoutes(rg *gin.RouterGroup, dbInstance *gorm.DB, cacheInstance cache.CacheClient) *gin.RouterGroup {
 
-	postRepository := repositories.NewPostRepository(dbInstance)
+	postRepository := repositories.NewPostRepository(dbInstance, cacheInstance)
 
 	getPostsUC := getposts.NewGetPostsUseCase(postRepository)
 	getPostByIdUC := getpostbyid.NewGetPostByIDUseCase(postRepository)

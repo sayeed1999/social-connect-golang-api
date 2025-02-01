@@ -5,6 +5,7 @@ import (
 	"log"
 	"sayeed1999/social-connect-golang-api/api/routes"
 	"sayeed1999/social-connect-golang-api/config"
+	"sayeed1999/social-connect-golang-api/infrastructure/cache"
 	"sayeed1999/social-connect-golang-api/infrastructure/database"
 
 	"github.com/gin-gonic/gin"
@@ -21,11 +22,16 @@ func main() {
 
 	dbInstance := database.Instance()
 
+	// Connect to cache (redis) instance
+	cacheService := cache.NewCacheService()
+	cacheService.Init()
+	// defer cacheInstance.Close()
+
 	// Initialize Gin engine
 	app := gin.Default()
 
 	// Initialize routes
-	routes.InitRoutes(app, dbInstance)
+	routes.InitRoutes(app, dbInstance, cacheService)
 
 	addr := fmt.Sprintf("%v:%v", cfg.ListenIP, cfg.ListenPORT)
 	log.Printf("%v api will listen on %v", cfg.API.NAME, addr)

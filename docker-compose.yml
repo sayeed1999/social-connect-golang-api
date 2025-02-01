@@ -29,9 +29,20 @@ services:
     networks:
       - api_network
 
+  redis:
+    image: redis:8.0-M03-alpine
+    container_name: redis
+    ports:
+      - ${API_REDIS_PORT}:6379
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - api_network
 volumes:
   pg-data:
   pgadmin-data:
+  redis-data:
 
 networks:
   api_network:
