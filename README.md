@@ -20,6 +20,12 @@ Set necessary environment variables by executing the script:
 . scripts/set-env.sh
 ```
 
+Get the docker containers up for dependent services e.g postgres, redis, .. by running:
+
+```bash
+docker compose up -d
+```
+
 Open up terminal from root dir & run:
 
 ```bash
