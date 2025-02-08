@@ -34,6 +34,12 @@ Open up terminal from root dir & run:
 go run api/main.go
 ```
 
+To run all tests in the project, run from root dir:
+
+```bash
+go test ./...
+```
+
 ## Additional Documentations
 
 - [ARCHITECTURE](documentations/ARCHITECTURE.md)
