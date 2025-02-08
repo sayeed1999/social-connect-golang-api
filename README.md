@@ -33,3 +33,7 @@ Open up terminal from root dir & run:
 ```bash
 go run api/main.go
 ```
+
+## Additional Documentations
+
+- [ARCHITECTURE](documentations/ARCHITECTURE.md)
