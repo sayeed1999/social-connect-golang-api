@@ -1,7 +1,7 @@
 package hadithlib_test
 
 import (
-	hadithlib "sayeed1999/social-connect-golang-api/infrastructure/external"
+	"sayeed1999/social-connect-golang-api/infrastructure/external/hadithlib"
 	"testing"
 )
 
@@ -13,9 +13,9 @@ func TestGetHadithRandomness(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		// hadithlib.GetHadith() returns a pointer to the result, pointer can be 'nil' if randomInd = 5
 		// &hadithlib.GetHadith() would return the value, should not be used as GetHadith() doesn't always ensure a value!
-		hadith := hadithlib.GetHadith()
+		hadith, err := hadithlib.GetHadith()
 
-		if hadith == nil {
+		if hadith == nil || err != nil {
 			nilHadithCount++
 		}
 	}

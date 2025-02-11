@@ -3,6 +3,7 @@ module sayeed1999/social-connect-golang-api
 go 1.23.2
 
 require (
+	github.com/cenkalti/backoff/v5 v5.0.1
 	github.com/gin-gonic/gin v1.10.0
 	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.0
